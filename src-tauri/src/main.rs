@@ -14,8 +14,16 @@ static PATH: Mutex<Option<PathBuf>> = Mutex::new(None);
 #[tauri::command]
 fn open_main_path_and_save_recent() -> String {
     // 选择文件夹并将文件路径写入 recent
-    let path = FileDialog::new().pick_folder().unwrap();
-    let r = path.clone().into_os_string().into_string().unwrap();
+    let path = FileDialog::new().pick_folder();
+    if path.is_none() {
+        return String::new();
+    }
+    let r = path
+        .clone()
+        .unwrap()
+        .into_os_string()
+        .into_string()
+        .unwrap();
     match &*CONFIG.lock().unwrap() {
         Some(c) => {
             fs::write(&c.recent_file, &r).unwrap();
@@ -27,7 +35,7 @@ fn open_main_path_and_save_recent() -> String {
 
     // 存储到全局
     let mut p = PATH.lock().unwrap();
-    *p = Some(path);
+    *p = path;
     r
 }
 
