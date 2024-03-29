@@ -2,7 +2,6 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 use rfd::FileDialog;
 use std::{fs, path::PathBuf, sync::Mutex};
-
 struct AppConfig {
     config_folder: PathBuf,
     recent_file: PathBuf,
