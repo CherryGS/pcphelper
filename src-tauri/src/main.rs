@@ -2,7 +2,6 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 use rfd::FileDialog;
 use std::{fs, path::PathBuf, sync::Mutex};
-
 struct AppConfig {
     config_folder: PathBuf,
     recent_file: PathBuf,
@@ -14,8 +13,19 @@ static PATH: Mutex<Option<PathBuf>> = Mutex::new(None);
 #[tauri::command]
 fn open_main_path_and_save_recent() -> String {
     // 选择文件夹并将文件路径写入 recent
-    let path = FileDialog::new().pick_folder().unwrap();
-    let r = path.clone().into_os_string().into_string().unwrap();
+    let path = FileDialog::new().pick_folder();
+    match path {
+        None => {
+            return String::new();
+        }
+        _ => {}
+    }
+    let r = path
+        .clone()
+        .unwrap()
+        .into_os_string()
+        .into_string()
+        .unwrap();
     match &*CONFIG.lock().unwrap() {
         Some(c) => {
             fs::write(&c.recent_file, &r).unwrap();
@@ -27,7 +37,7 @@ fn open_main_path_and_save_recent() -> String {
 
     // 存储到全局
     let mut p = PATH.lock().unwrap();
-    *p = Some(path);
+    *p = path;
     r
 }
 

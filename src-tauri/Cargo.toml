@@ -17,6 +17,7 @@ serde_json = "1"
 clap = { version = "4.5.2", features = ["cargo", "debug", "derive", "env", "string", "unicode", "wrap_help"] }
 rfd = "0.14.0"
 lazy_static = { version = "1.4.0", features = ["spin"] }
+toml = "0.8.12"
 
 [features]
 # This feature is used for production builds or when a dev server is not specified, DO NOT REMOVE!!
